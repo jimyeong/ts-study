@@ -1,18 +1,23 @@
 import * as React from 'react';
 import './App.css';
-import {Store, Unsubscribe} from 'redux';
+import { Unsubscribe} from 'redux';
 import {addAge} from './index';
+import * as PropTypes from 'prop-types';
 
 
 
 
 
 
-class App extends React.Component <{store:Store<{age:number;}>}>{
+class App extends React.Component<{},{}>{
+    public static contextType = {
+        store: PropTypes.object
+    }
+
     private _unsubscribe:Unsubscribe;
 
     componentDidMount() {
-        const store = this.props.store;
+        const store = this.context.store;
         this._unsubscribe = store.subscribe(() => {
             this.forceUpdate();
         });
@@ -26,7 +31,7 @@ class App extends React.Component <{store:Store<{age:number;}>}>{
 
 
     public render() {
-        const store = this.props.store;
+        const store = this.context.store;
         const state = store.getState();
     return (
       <div className="App">

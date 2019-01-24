@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
-import {createStore} from 'redux';
+import {createStore,Store} from 'redux';
+import PropTypes from 'prop-types';
 
 
 import './index.css';
@@ -25,13 +26,25 @@ function ageApp(state:{age:number;} = {age:35},action:{type:"ADD_AGE"}){
 
 const store = createStore<{age:number;}>(ageApp);
 
-class Provider extends React.Component{
-
-}
+class Provider extends React.Component<{store: Store<{age: number}>}>{
+    static childContextTypes={
+        store:PropTypes.object
+    };
+    getChildContext(){
+        return{
+            state:this.props.store
+        }
+    }
+    render(){
+        return this.props.children as JSX.Element;
+    }
+};
 
 
 ReactDOM.render(
-    <App store={store}/>,
+    <Provider store={store}>
+        <App/>
+    </Provider>,
     document.getElementById('root') as HTMLElement
 );
 
